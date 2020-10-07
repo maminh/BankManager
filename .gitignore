@@ -438,3 +438,5 @@ modules.xml
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,redis,pycharm,pycharm+iml,pycharm+all,vscode
+
+local_*
