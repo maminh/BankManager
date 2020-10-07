@@ -22,11 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mt)sj$&*mz7l(=jqave%5)x_zyc1y_!t&2(0*_$zrv6be9-f5b'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -36,6 +31,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'phonenumber_field',
+
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +82,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -118,3 +119,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Phone number
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
