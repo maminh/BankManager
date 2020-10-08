@@ -26,3 +26,6 @@ class Branch(models.Model):
     class Meta:
         verbose_name = _('branch')
         verbose_name_plural = _('branches')
+
+    def __str__(self):
+        return self.name

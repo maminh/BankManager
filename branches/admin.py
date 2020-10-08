@@ -12,5 +12,19 @@ class BranchAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'manager':
-            kwargs['queryset'] = User.objects.filter(is_staff=True)
+            kwargs['queryset'] = User.objects.filter(is_staff=True, managed_branch=None, is_superuser=False)
         return super(BranchAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def has_module_permission(self, request):
+        return hasattr(request.user, 'managed_branch') or request.user.is_superuser
+
+    def has_view_permission(self, request, obj=None):
+        if request.user.is_superuser or (obj is None and hasattr(request.user, 'managed_branch')):
+            return True
+        return obj and request.user == obj.manager
+
+    def get_queryset(self, request):
+        queryset = super(BranchAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(manager=request.user)
