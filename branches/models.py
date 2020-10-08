@@ -29,3 +29,7 @@ class Branch(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def total_deposit(self):
+        return self.accounts.aggregate(models.Sum('amount'))['amount__sum']

@@ -5,9 +5,9 @@ from .models import Branch, User
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone_number', 'manager', 'created_date', 'modified_date')
-    fields = ('name', ('phone_number', 'address'), 'manager', ('created_date', 'modified_date'))
-    readonly_fields = ('created_date', 'modified_date')
+    list_display = ('name', 'phone_number', 'manager', 'created_date', 'modified_date', 'total_deposit')
+    fields = ('name', ('phone_number', 'address'), 'manager', ('created_date', 'modified_date'), 'total_deposit')
+    readonly_fields = ('created_date', 'modified_date', 'total_deposit')
     search_fields = ('name', 'address')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
