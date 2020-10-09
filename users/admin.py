@@ -92,6 +92,9 @@ class AccountAdmin(admin.ModelAdmin):
             return True
         return obj and request.user == obj.branch.manager
 
+    def has_delete_permission(self, request, obj=None):
+        return self.has_view_permission(request, obj)
+
     def get_queryset(self, request):
         if request.user.is_superuser:
             return super(AccountAdmin, self).get_queryset(request)
