@@ -2,6 +2,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from .tasks import send_sms
 from .models import Transaction
 
 
@@ -36,4 +37,5 @@ class TransactionSerializer(serializers.ModelSerializer):
         else:
             account.amount += validated_data['amount']
         account.save(update_fields=['amount'])
+        send_sms.delay(ret.id, account.id)
         return ret

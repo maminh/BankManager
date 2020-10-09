@@ -5,3 +5,7 @@ django-phonenumber-field~=5.0.0
 djangorestframework~=3.12.1
 djangorestframework-jwt~=1.11.0
 requests~=2.24.0
+django-celery~=3.3.1
+celery==4.4.4
+redis~=3.5.3
+future~=0.18.2

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
     'phonenumber_field',
     'rest_framework',
+    'djcelery',
 
     'users',
     'branches',
@@ -142,3 +143,8 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1)
 }
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Tehran'
