@@ -1,4 +1,7 @@
-django==3.1.2
-psycopg2==2.8.6
-phonenumberslite==8.12.10
-django-phonenumber-field==5.0.0
+django~=3.1.2
+psycopg2~=2.8.6
+phonenumberslite~=8.12.10
+django-phonenumber-field~=5.0.0
+djangorestframework~=3.12.1
+djangorestframework-jwt~=1.11.0
+requests~=2.24.0
