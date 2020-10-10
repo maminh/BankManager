@@ -23,5 +23,6 @@ def send_sms(transaction_id, account_id):
            f"{transaction.get_transaction_type_display()} with amount {transaction.amount} completed \n" \
            f"date: {transaction.transaction_date}\n" \
            f"current deposit: {account.amount}"
+    # SMPP Server api will call here
     logger.info(f'sending:\n"{text}"\nto {account.mobile_number}')
     return text

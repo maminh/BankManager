@@ -136,12 +136,12 @@ LOGGING = {
             'formatter': 'simple'
         },
         'users.tasks': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs' 'beat.log'),
         },
         'transactions_debug': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs', 'transactions_debug.log'),
             'formatter': 'verbose'
@@ -153,7 +153,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'profit_debug': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs', 'profit_debug.log'),
             'formatter': 'verbose'
@@ -164,6 +164,18 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs', 'profit_warning.log'),
             'formatter': 'verbose'
         },
+        'sms_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'sms_debug.log'),
+            'formatter': 'verbose'
+        },
+        'sms_warning': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'sms_warning.log'),
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django': {
@@ -172,6 +184,10 @@ LOGGING = {
         },
         'transactions.serializers': {
             'handlers': ['transactions_debug', 'transactions_warning'],
+            'propagate': True,
+        },
+        'transactions.tasks': {
+            'handlers': ['sms_debug', 'sms_warning'],
             'propagate': True,
         },
         'users.tasks': {
