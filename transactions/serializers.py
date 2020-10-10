@@ -1,9 +1,14 @@
+import logging
+
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+from rest_framework import exceptions
 from rest_framework import serializers
 
-from .tasks import send_sms
 from .models import Transaction
+from .tasks import send_sms
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -28,14 +33,19 @@ class TransactionSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    @transaction.atomic
     def create(self, validated_data):
         account = self.get_user().account
-        ret = super(TransactionSerializer, self).create(validated_data)
         if validated_data['transaction_type'] == Transaction.TRANSACTION_WITHDRAW:
             account.amount -= validated_data['amount']
         else:
             account.amount += validated_data['amount']
-        account.save(update_fields=['amount'])
-        send_sms.delay(ret.id, account.id)
+        try:
+            with transaction.atomic():
+                ret = super(TransactionSerializer, self).create(validated_data)
+                account.save(update_fields=['amount'])
+                send_sms.delay(ret.id, account.id)
+        except Exception as exc:
+            logger.error(f'{exc} happened when creating transaction {validated_data} for account {account}')
+            raise exceptions.APIException('unable to submit exception')
+        logger.info(f'transaction {ret.id} successfully created for account {account.id}')
         return ret
