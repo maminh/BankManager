@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from celery.schedules import crontab
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 @periodic_task(run_every=crontab(hour=00, minute=30))
 def deposit_profit():
+    logger.info(f'task started at {datetime.datetime.now()}')
     for account in Account.objects.filter(user__is_active=True):
         profit = None
         for i in range(10):
@@ -26,3 +28,4 @@ def deposit_profit():
                 )
         else:
             logger.error(f'unable to deposit profit for {account.id}, amount:{account.amount}, profit: {profit}')
+    logger.info(f'task finished at {datetime.datetime.now()}')

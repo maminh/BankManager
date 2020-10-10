@@ -152,6 +152,18 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs', 'transactions_warning.log'),
             'formatter': 'verbose'
         },
+        'profit_debug': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'profit_debug.log'),
+            'formatter': 'verbose'
+        },
+        'profit_warning': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'profit_warning.log'),
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django': {
@@ -161,7 +173,11 @@ LOGGING = {
         'transactions.serializers': {
             'handlers': ['transactions_debug', 'transactions_warning'],
             'propagate': True,
-        }
+        },
+        'users.tasks': {
+            'handlers': ['profit_debug', 'profit_warning'],
+            'propagate': True,
+        },
     }
 }
 
