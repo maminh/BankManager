@@ -33,7 +33,7 @@ class Account(models.Model):
     first_name = models.CharField(verbose_name=_('first name'), max_length=64)
     last_name = models.CharField(verbose_name=_('last name'), max_length=64)
 
-    amount = models.PositiveIntegerField(verbose_name=_('amount'), default=0)
+    amount = models.FloatField(verbose_name=_('amount'), default=0)
 
     created_date = models.DateTimeField(auto_now_add=True, verbose_name=_('creation date'))
     modified_date = models.DateTimeField(auto_now=True, verbose_name=_('modified date'))

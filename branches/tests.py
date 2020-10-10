@@ -51,21 +51,19 @@ class BranchModelTest(TestCase):
 
 
 class BranchAdminTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.manager_user = User.objects.create(email='manager@mail.com', password='foo', is_staff=True)
-        cls.super_user = User.objects.create_superuser(email='sudo@mail.com', password='foo', is_staff=True)
-        cls.another_manager_user = User.objects.create(email='manager2@mail.com', password='foo', is_staff=True)
-        cls.normal_staff_user = User.objects.create(email='staff@mail.com', password='foo', is_staff=True)
-        cls.normal_user = User.objects.create(email='normal@mail.com', password='foo', is_staff=False)
-        cls.branch = Branch.objects.create(
-            name='branch name', address='address', phone_number='+982177123456', manager=cls.manager_user
+    def setUp(self) -> None:
+        self.manager_user = User.objects.create(email='manager@mail.com', password='foo', is_staff=True)
+        self.super_user = User.objects.create_superuser(email='sudo@mail.com', password='foo', is_staff=True)
+        self.another_manager_user = User.objects.create(email='manager2@mail.com', password='foo', is_staff=True)
+        self.normal_staff_user = User.objects.create(email='staff@mail.com', password='foo', is_staff=True)
+        self.normal_user = User.objects.create(email='normal@mail.com', password='foo', is_staff=False)
+        self.branch = Branch.objects.create(
+            name='branch name', address='address', phone_number='+982177123456', manager=self.manager_user
         )
-        cls.second_branch = Branch.objects.create(
-            name='branch name2', address='address2', phone_number='+982177123476', manager=cls.another_manager_user
+        self.second_branch = Branch.objects.create(
+            name='branch name2', address='address2', phone_number='+982177123476', manager=self.another_manager_user
         )
 
-    def setUp(self) -> None:
         self.site = AdminSite()
         self.model_admin = BranchAdmin(Branch, self.site)
         self.request_factory = RequestFactory()
@@ -123,4 +121,4 @@ class BranchAdminTest(TestCase):
     def test_formfield_for_foreignkey(self):
         request = self.request_factory.get(reverse('admin:branches_branch_add'))
         result = self.model_admin.formfield_for_foreignkey(Branch.manager.field, request)
-        self.assertEqual(result.queryset.count(), 1)
+        self.assertEqual(result.queryset.count(), 3)

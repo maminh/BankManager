@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import datetime
+import os
 from pathlib import Path
+
+from celery.schedules import crontab
 
 from .local_settings import *
 
@@ -35,7 +38,6 @@ INSTALLED_APPS = [
 
     'phonenumber_field',
     'rest_framework',
-    'djcelery',
 
     'users',
     'branches',
