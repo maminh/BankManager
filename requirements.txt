@@ -9,3 +9,4 @@ django-celery~=3.3.1
 celery==4.4.4
 redis~=3.5.3
 future~=0.18.2
+django-import-export~=2.4.0

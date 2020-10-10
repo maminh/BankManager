@@ -1,11 +1,29 @@
 from django.contrib import admin
+from import_export import fields
+from import_export import resources
+from import_export.admin import ImportExportActionModelAdmin
 
 from branches.models import Branch
 from .models import Transaction
 
 
+class TransactionResource(resources.ModelResource):
+    transaction_type = fields.Field(attribute='get_transaction_type_display', column_name='transaction type')
+
+    class Meta:
+        model = Transaction
+        fields = (
+            'account__first_name', 'account__last_name', 'account__identity_number', 'transaction_type', 'branch__name',
+            'transaction_date', 'amount', 'account__amount'
+        )
+        export_order = (
+            'account__first_name', 'account__last_name', 'account__identity_number', 'account__amount', 'branch__name',
+            'transaction_date', 'transaction_type', 'amount'
+        )
+
+
 @admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionAdmin(ImportExportActionModelAdmin):
     search_fields = ('account__first_name', 'account__last_name', 'account__identity_number')
     list_display = ('amount', 'transaction_date', 'account', 'branch', 'transaction_type')
     fields = ('amount', 'transaction_date', 'account', 'branch', 'transaction_type')
@@ -14,6 +32,7 @@ class TransactionAdmin(admin.ModelAdmin):
     raw_id_fields = ('account', 'branch',)
     radio_fields = {'transaction_type': admin.HORIZONTAL}
     date_hierarchy = 'transaction_date'
+    resource_class = TransactionResource
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'branch' and not request.user.is_superuser:
