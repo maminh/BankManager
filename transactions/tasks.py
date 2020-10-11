@@ -8,6 +8,11 @@ from users.models import Account
 logger = logging.getLogger(__name__)
 
 
+class MockSmppServer:
+    def send_text(self, text, number):
+        pass
+
+
 @shared_task
 def send_sms(transaction_id, account_id):
     try:
@@ -24,5 +29,6 @@ def send_sms(transaction_id, account_id):
            f"date: {transaction.transaction_date}\n" \
            f"current deposit: {account.amount}"
     # SMPP Server api will call here
+    MockSmppServer().send_text(text, account.mobile_number)
     logger.info(f'sending:\n"{text}"\nto {account.mobile_number}')
     return text
