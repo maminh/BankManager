@@ -10,6 +10,23 @@ class TransactionViewSet(mixins.RetrieveModelMixin,
                          mixins.CreateModelMixin,
                          mixins.ListModelMixin,
                          GenericViewSet):
+    """
+    list:
+    API View that receives a GET
+
+    Returns a list of transactions made by authenticated user
+
+    retrieve:
+    API View that receives a GET
+
+    Returns the transaction's JSON object
+
+    create:
+    API View that receives a POST and creates a new transaction
+
+    transaction_type = 1 for withdraw, 2 for deposit
+
+    """
     serializer_class = TransactionSerializer
     permission_classes = [HaveAccountPermission]
 

@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import authentication, permissions
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('users.urls')),
     path('transaction/', include('transactions.urls')),
+    path('docs/', include_docs_urls(title='Bank API',
+                                    description='User JSON authentication only (scheme value is JWT)',
+                                    authentication_classes=(authentication.BasicAuthentication,),
+                                    permission_classes=(permissions.IsAdminUser,))),
 ]
