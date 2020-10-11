@@ -18,8 +18,7 @@ class Transaction(models.Model):
     account = models.ForeignKey(Account, verbose_name=_('account'), related_name='transactions',
                                 on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch, verbose_name=_('branch'), related_name='withdraws', on_delete=models.CASCADE)
-    transaction_type = models.PositiveSmallIntegerField(default=TRANSACTION_WITHDRAW, verbose_name=_('type'),
-                                                        choices=TRANSACTION_CHOICES)
+    transaction_type = models.PositiveSmallIntegerField(verbose_name=_('type'), choices=TRANSACTION_CHOICES)
 
     class Meta:
         verbose_name = _('transaction')
