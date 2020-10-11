@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from branches.models import Branch
 from .models import Account, CustomUser
+from .tasks import deposit_profit
 
 
 class UsersManagersTests(TestCase):
@@ -78,3 +79,31 @@ class AccountModelTest(TestCase):
             Account.objects.create(first_name='amin', last_name='hosseini', user=self.user,
                                    mobile_number='+989121234567', branch=self.branch,
                                    identity_number='0011234568')
+
+
+class UsersTaskTest(TestCase):
+    def setUp(self) -> None:
+        self.user_a = CustomUser.objects.create(email='user1@mail.com', password='foo')
+        self.user_b = CustomUser.objects.create(email='user2@mail.com', password='foo')
+        self.user_inactive = CustomUser.objects.create(email='user3@mail.com', password='foo', is_active=False)
+        user_manager = CustomUser.objects.create(email='manager@mail.com', password='foo', is_staff=True)
+
+        branch = Branch.objects.create(
+            name='test branch', address='address', phone_number='+982177123456', manager=user_manager
+        )
+
+        self.account_a = Account.objects.create(first_name='amin', last_name='hosseini', user=self.user_a,
+                                                mobile_number='+989121234568', branch=branch,
+                                                identity_number='0011234567', amount=100)
+        self.account_b = Account.objects.create(first_name='amin', last_name='hosseini', user=self.user_b,
+                                                mobile_number='+989121234569', branch=branch,
+                                                identity_number='0011234569', amount=15)
+        self.account_inactive = Account.objects.create(first_name='amin', last_name='hosseini', user=self.user_inactive,
+                                                       mobile_number='+989121234567', branch=branch,
+                                                       identity_number='0011234564', amount=20)
+
+    def test_task(self):
+        deposit_profit.apply()
+        self.assertEqual(Account.objects.get(id=self.account_a.id).amount, 110)
+        self.assertEqual(Account.objects.get(id=self.account_b.id).amount, 16.5)
+        self.assertEqual(Account.objects.get(id=self.account_inactive.id).amount, 20)
