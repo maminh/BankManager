@@ -12,5 +12,5 @@ LOCAL_DB_PASS = None
 LOCAL_DB_HOST = None
 LOCAL_DB_PORT = 5432
 
-LOCAL_HOST = 'http://127.0.0.1'
+LOCAL_HOST = 'http://localhost'
 LOCAL_PORT = 8000
