@@ -46,4 +46,4 @@ docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
 ```
 
-Access project using [http://localhost:1337/admin/](http://localhost:1337/admin/)
+Access project using [http://127.0.0.1:1337/admin/](http://localhost:1337/admin/)
