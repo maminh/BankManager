@@ -19,7 +19,7 @@ Permissions:
 #### Run the project
 First create a local_settings.py file in BankManager app
 ```bash
-cp BankManager/.local_settings_template.py BankManager/.local_settings.py
+cp BankManager/.local_settings_template.py BankManager/local_settings.py
 ```
 The content of this file does not need to change if you want to run the project using docker
 
@@ -37,7 +37,7 @@ Build and run the project using following command:
 docker-compose up -d --build
 ```
 
-then run the following commands
+Then run the following commands
 ```bash
 # apply the migrations
 docker-compose exec web python manage.py migrate --noinput
@@ -46,4 +46,4 @@ docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
 ```
 
-access project using [http://localhost:1337/admin/](http://localhost:1337/admin/)
+Access project using [http://localhost:1337/admin/](http://localhost:1337/admin/)
