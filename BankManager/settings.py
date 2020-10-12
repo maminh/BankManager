@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import datetime
 import os
+import shutil
 from pathlib import Path
 
 from celery.schedules import crontab
@@ -24,9 +25,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mt)sj$&*mz7l(=jqave%5)x_zyc1y_!t&2(0*_$zrv6be9-f5b'
+SECRET_KEY = os.environ.get("SECRET_KEY", LOCAL_SECRET)
 
-# Application definition
+DEBUG = os.environ.get("DJANGO_DEBUG", False)
+
+allowed_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", " ").split(" ")
+if any(allowed_hosts):
+    ALLOWED_HOSTS = allowed_hosts
+else:
+    ALLOWED_HOSTS = LOCAL_ALLOWED_HOSTS
+
+HOST_NAME = os.environ.get("DEPLOY_HOST_NAME", LOCAL_HOST)
+HOST_PORT = os.environ.get("DEPLOY_HOST_PORT", LOCAL_PORT)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,11 +92,11 @@ WSGI_APPLICATION = 'BankManager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASS,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
+        'NAME': os.environ.get('DB_NAME', LOCAL_DB_NAME),
+        'USER': os.environ.get('DB_USER', LOCAL_DB_USER),
+        'PASSWORD': os.environ.get('DB_PASS', LOCAL_DB_PASS),
+        'HOST': os.environ.get('DB_HOST', LOCAL_DB_HOST),
+        'PORT': os.environ.get('DB_PORT', LOCAL_DB_PORT),
     }
 }
 
@@ -129,16 +139,9 @@ LOGGING = {
         },
     },
     'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'users.tasks': {
+        'django': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs' 'beat.log'),
+            'class': 'logging.StreamHandler',
         },
         'transactions_debug': {
             'level': 'DEBUG',
@@ -179,7 +182,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['django'],
             'propagate': True,
         },
         'transactions.serializers': {
@@ -237,3 +240,9 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Tehran'
+
+redis_host = os.environ.get('REDIS_HOST', LOCAL_REDIS_HOST)
+redis_port = os.environ.get('REDIS_PORT', LOCAL_REDIS_PORT)
+
+CELERY_BROKER_URL = f'redis://{redis_host}:{redis_port}'
+CELERY_RESULT_BACKEND = f'redis://{redis_host}:{redis_port}'

@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import authentication, permissions
@@ -25,5 +26,8 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='Bank API',
                                     description='User JSON authentication only (scheme value is JWT)',
                                     authentication_classes=(authentication.BasicAuthentication,),
-                                    permission_classes=(permissions.IsAdminUser,))),
+                                    permission_classes=(permissions.IsAdminUser,),
+                                    schema_url=f'{settings.HOST_NAME}:{settings.HOST_PORT}',
+                                    )
+         ),
 ]

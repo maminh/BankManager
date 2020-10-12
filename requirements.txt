@@ -11,3 +11,4 @@ redis~=3.5.3
 future~=0.18.2
 django-import-export~=2.4.0
 coreapi~=2.3.3
+gunicorn~=20.0.4
